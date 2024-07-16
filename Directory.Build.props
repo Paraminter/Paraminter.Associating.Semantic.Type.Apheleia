@@ -3,7 +3,7 @@
     <PropertyGroup>
         <LangVersion>12</LangVersion>
 
-        <RootNamespace>Paraminter.Associators.Semantic</RootNamespace>
+        <RootNamespace>Paraminter.Associators.Semantic.Type.Simple</RootNamespace>
 
         <Nullable>enable</Nullable>
         <AnalysisMode>all</AnalysisMode>

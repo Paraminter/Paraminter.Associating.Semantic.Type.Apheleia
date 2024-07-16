@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <AssemblyName>Paraminter.Associators.Semantic.Type.Simple.Services</AssemblyName>
+        
+        <PackageId>Paraminter.Associators.Semantic.Type.Simple.Services</PackageId>
+        <Description>Provides general implementations of services related to a simple Paraminter associator of semantic data about type arguments and type parameters.</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Paraminter.Associators.Queries" />
+        <PackageReference Include="Paraminter.Associators.Semantic.Type.Queries.Collectors" />
+        <PackageReference Include="Paraminter.Queries.Handlers" />
+
+        <ProjectReference Include="$(SolutionDir)\src\Queries\Queries.csproj" />
+    </ItemGroup>
+
+</Project>

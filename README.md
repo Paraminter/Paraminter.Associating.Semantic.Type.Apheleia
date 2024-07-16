@@ -1,5 +1,5 @@
-# Paraminter.Associators.Semantic.Type
+# Paraminter.Associators.Semantic.Type.Simple
 
-Semantically associates .NET type arguments and parameters.
+Provides a simple `Paraminter` associator of semantic data about type arguments and type parameters.
 
 See [Paraminter](https://www.github.com/Paraminter/Paraminter) for more information.
