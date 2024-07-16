@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <AssemblyName>Paraminter.Associators.Semantic.Type.Simple.Services</AssemblyName>
+        <AssemblyName>Paraminter.Associators.Semantic.Type.Apheleia.Services</AssemblyName>
         
-        <PackageId>Paraminter.Associators.Semantic.Type.Simple.Services</PackageId>
-        <Description>Provides general implementations of services related to a simple Paraminter associator of semantic data about type arguments and type parameters.</Description>
+        <PackageId>Paraminter.Associators.Semantic.Type.Apheleia.Services</PackageId>
+        <Description>Provides general implementations of services related to a Paraminter associator specialized in semantic data about type arguments.</Description>
     </PropertyGroup>
 
     <ItemGroup>

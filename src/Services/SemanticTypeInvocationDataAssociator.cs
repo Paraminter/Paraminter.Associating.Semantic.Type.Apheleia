@@ -1,8 +1,8 @@
-﻿namespace Paraminter.Associators.Semantic.Type.Simple;
+﻿namespace Paraminter.Associators.Semantic.Type.Apheleia;
 
 using Paraminter.Associators.Queries;
+using Paraminter.Associators.Semantic.Type.Apheleia.Queries;
 using Paraminter.Associators.Semantic.Type.Queries.Collectors;
-using Paraminter.Associators.Semantic.Type.Simple.Queries;
 using Paraminter.Queries.Handlers;
 
 using System;

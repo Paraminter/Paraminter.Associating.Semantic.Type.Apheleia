@@ -1,5 +1,5 @@
-# Paraminter.Associators.Semantic.Type.Simple.Queries.Collectors
+# Paraminter.Associators.Semantic.Type.Apheleia.Queries.Collectors
 
-Defines query response collectors related to a simple `Paraminter` associator of semantic data about type arguments and type parameters.
+Provides general implementations of services related to a `Paraminter` associator specialized in semantic data about type arguments.
 
-See [GitHub](https://github.com/Paraminter/Paraminter.Associators.Semantic.Type.Simple) for more information.
+See [GitHub](https://github.com/Paraminter/Paraminter.Associators.Semantic.Type.Apheleia) for more information.
