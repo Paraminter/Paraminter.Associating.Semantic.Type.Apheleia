@@ -1,5 +1,5 @@
-# Paraminter.Associators.Semantic.Type.Apheleia.Queries
+# Paraminter.Semantic.Type.Apheleia.Queries
 
-Defines queries related to a `Paraminter` associator specialized in semantic data about type arguments.
+Defines queries related to a `Paraminter` associator specialized in semantic type arguments.
 
-See [GitHub](https://github.com/Paraminter/Paraminter.Associators.Semantic.Type.Apheleia) for more information.
+See [GitHub](https://github.com/Paraminter/Paraminter.Semantic.Type.Apheleia) for more information.

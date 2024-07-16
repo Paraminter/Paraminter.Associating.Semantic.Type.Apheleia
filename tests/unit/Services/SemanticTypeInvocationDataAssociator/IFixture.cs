@@ -1,9 +1,9 @@
-﻿namespace Paraminter.Associators.Semantic.Type.Apheleia;
+﻿namespace Paraminter.Semantic.Type.Apheleia;
 
 using Paraminter.Associators.Queries;
-using Paraminter.Associators.Semantic.Type.Apheleia.Queries;
-using Paraminter.Associators.Semantic.Type.Queries.Collectors;
 using Paraminter.Queries.Handlers;
+using Paraminter.Semantic.Type.Apheleia.Queries;
+using Paraminter.Semantic.Type.Queries.Collectors;
 
 internal interface IFixture
 {

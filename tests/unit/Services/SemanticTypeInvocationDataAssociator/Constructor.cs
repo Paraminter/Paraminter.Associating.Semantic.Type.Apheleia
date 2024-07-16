@@ -1,4 +1,4 @@
-﻿namespace Paraminter.Associators.Semantic.Type.Apheleia;
+﻿namespace Paraminter.Semantic.Type.Apheleia;
 
 using Xunit;
 

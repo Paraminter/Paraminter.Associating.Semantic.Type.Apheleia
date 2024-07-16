@@ -1,5 +1,5 @@
-# Paraminter.Associators.Semantic.Type.Apheleia.Queries.Collectors
+# Paraminter.Semantic.Type.Apheleia.Queries.Collectors
 
-Provides general implementations of services related to a `Paraminter` associator specialized in semantic data about type arguments.
+Provides general implementations of services related to a `Paraminter` associator specialized in semantic type arguments.
 
-See [GitHub](https://github.com/Paraminter/Paraminter.Associators.Semantic.Type.Apheleia) for more information.
+See [GitHub](https://github.com/Paraminter/Paraminter.Semantic.Type.Apheleia) for more information.

@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <AssemblyName>Paraminter.Associators.Semantic.Type.Apheleia.Queries</AssemblyName>
+        <AssemblyName>Paraminter.Semantic.Type.Apheleia.Queries</AssemblyName>
 
-        <RootNamespace>Paraminter.Associators.Semantic.Type.Apheleia.Queries</RootNamespace>
+        <RootNamespace>Paraminter.Semantic.Type.Apheleia.Queries</RootNamespace>
         
-        <PackageId>Paraminter.Associators.Semantic.Type.Apheleia.Queries</PackageId>
-        <Description>Defines queries related to a Paraminter associator specialized in semantic data about type arguments.</Description>
+        <PackageId>Paraminter.Semantic.Type.Apheleia.Queries</PackageId>
+        <Description>Defines queries related to a Paraminter associator specialized in semantic type arguments.</Description>
     </PropertyGroup>
 
     <ItemGroup>
