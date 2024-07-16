@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <AssemblyName>Paraminter.Associators.Semantic.Type.Simple.Queries</AssemblyName>
+
+        <RootNamespace>Paraminter.Associators.Semantic.Type.Simple.Queries</RootNamespace>
+        
+        <PackageId>Paraminter.Associators.Semantic.Type.Simple.Queries</PackageId>
+        <Description>Defines queries related to a simple Paraminter associator of semantic data about type arguments and type parameters.</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" />
+    </ItemGroup>
+
+</Project>
