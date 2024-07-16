@@ -9,8 +9,8 @@
 
         <Owners>Paraminter</Owners>
         <Authors>ErikWe</Authors>
-        <PackageProjectUrl>https://github.com/Paraminter/Paraminter.Associators.Semantic.Type.Apheleia</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/Paraminter/Paraminter.Associators.Semantic.Type.Apheleia</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/Paraminter/Paraminter.Semantic.Type.Apheleia</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Paraminter/Paraminter.Semantic.Type.Apheleia</RepositoryUrl>
         <PackageReadmeFile>README.nupkg.md</PackageReadmeFile>
         <PackageIcon>Logo.png</PackageIcon>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
