@@ -19,7 +19,7 @@ public sealed class Handle
     [Fact]
     public void NullQuery_ThrowsArgumentNullException()
     {
-        var result = Record.Exception(() => Target(null!, Mock.Of<ISemanticTypeInvocationDataAssociatorQueryResponseCollector>()));
+        var result = Record.Exception(() => Target(null!, Mock.Of<IInvalidatingSemanticTypeAssociationQueryResponseCollector>()));
 
         Assert.IsType<ArgumentNullException>(result);
     }
@@ -36,7 +36,7 @@ public sealed class Handle
     public void DifferentNumberOfParametersAndArguments_Invalidates()
     {
         Mock<IGetAssociatedInvocationDataQuery<IUnassociatedSemanticTypeInvocationData>> queryMock = new();
-        Mock<ISemanticTypeInvocationDataAssociatorQueryResponseCollector> queryResponseCollectorMock = new() { DefaultValue = DefaultValue.Mock };
+        Mock<IInvalidatingSemanticTypeAssociationQueryResponseCollector> queryResponseCollectorMock = new() { DefaultValue = DefaultValue.Mock };
 
         queryMock.Setup(static (query) => query.UnassociatedInvocationData.Parameters).Returns([]);
         queryMock.Setup(static (query) => query.UnassociatedInvocationData.Arguments).Returns([Mock.Of<ITypeSymbol>()]);
@@ -50,7 +50,7 @@ public sealed class Handle
     public void NoParametersOrArguments_AddsNone()
     {
         Mock<IGetAssociatedInvocationDataQuery<IUnassociatedSemanticTypeInvocationData>> queryMock = new();
-        Mock<ISemanticTypeInvocationDataAssociatorQueryResponseCollector> queryResponseCollectorMock = new() { DefaultValue = DefaultValue.Mock };
+        Mock<IInvalidatingSemanticTypeAssociationQueryResponseCollector> queryResponseCollectorMock = new() { DefaultValue = DefaultValue.Mock };
 
         queryMock.Setup(static (query) => query.UnassociatedInvocationData.Parameters).Returns([]);
         queryMock.Setup(static (query) => query.UnassociatedInvocationData.Arguments).Returns([]);
@@ -71,7 +71,7 @@ public sealed class Handle
         var argument2 = Mock.Of<ITypeSymbol>();
 
         Mock<IGetAssociatedInvocationDataQuery<IUnassociatedSemanticTypeInvocationData>> queryMock = new();
-        Mock<ISemanticTypeInvocationDataAssociatorQueryResponseCollector> queryResponseCollectorMock = new() { DefaultValue = DefaultValue.Mock };
+        Mock<IInvalidatingSemanticTypeAssociationQueryResponseCollector> queryResponseCollectorMock = new() { DefaultValue = DefaultValue.Mock };
 
         queryMock.Setup((query) => query.UnassociatedInvocationData.Parameters).Returns([parameter1, parameter2]);
         queryMock.Setup((query) => query.UnassociatedInvocationData.Arguments).Returns([argument1, argument2]);
@@ -86,7 +86,7 @@ public sealed class Handle
 
     private void Target(
         IGetAssociatedInvocationDataQuery<IUnassociatedSemanticTypeInvocationData> query,
-        ISemanticTypeInvocationDataAssociatorQueryResponseCollector queryResponseCollector)
+        IInvalidatingSemanticTypeAssociationQueryResponseCollector queryResponseCollector)
     {
         Fixture.Sut.Handle(query, queryResponseCollector);
     }

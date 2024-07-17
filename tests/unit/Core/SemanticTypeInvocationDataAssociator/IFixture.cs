@@ -7,5 +7,5 @@ using Paraminter.Semantic.Type.Queries.Collectors;
 
 internal interface IFixture
 {
-    public abstract IQueryHandler<IGetAssociatedInvocationDataQuery<IUnassociatedSemanticTypeInvocationData>, ISemanticTypeInvocationDataAssociatorQueryResponseCollector> Sut { get; }
+    public abstract IQueryHandler<IGetAssociatedInvocationDataQuery<IUnassociatedSemanticTypeInvocationData>, IInvalidatingSemanticTypeAssociationQueryResponseCollector> Sut { get; }
 }

@@ -7,16 +7,16 @@ using Paraminter.Semantic.Type.Queries.Collectors;
 
 using System;
 
-/// <summary>Associates semantic data about type arguments and type parameters.</summary>
+/// <summary>Associates semantic type argument.</summary>
 public sealed class SemanticTypeInvocationDataAssociator
-    : IQueryHandler<IGetAssociatedInvocationDataQuery<IUnassociatedSemanticTypeInvocationData>, ISemanticTypeInvocationDataAssociatorQueryResponseCollector>
+    : IQueryHandler<IGetAssociatedInvocationDataQuery<IUnassociatedSemanticTypeInvocationData>, IInvalidatingSemanticTypeAssociationQueryResponseCollector>
 {
-    /// <summary>Instantiates a <see cref="SemanticTypeInvocationDataAssociator"/>, associating semantic data about type arguments and type parameters.</summary>
+    /// <summary>Instantiates a <see cref="SemanticTypeInvocationDataAssociator"/>, associating semantic type arguments.</summary>
     public SemanticTypeInvocationDataAssociator() { }
 
-    void IQueryHandler<IGetAssociatedInvocationDataQuery<IUnassociatedSemanticTypeInvocationData>, ISemanticTypeInvocationDataAssociatorQueryResponseCollector>.Handle(
+    void IQueryHandler<IGetAssociatedInvocationDataQuery<IUnassociatedSemanticTypeInvocationData>, IInvalidatingSemanticTypeAssociationQueryResponseCollector>.Handle(
         IGetAssociatedInvocationDataQuery<IUnassociatedSemanticTypeInvocationData> query,
-        ISemanticTypeInvocationDataAssociatorQueryResponseCollector queryResponseCollector)
+        IInvalidatingSemanticTypeAssociationQueryResponseCollector queryResponseCollector)
     {
         if (query is null)
         {
