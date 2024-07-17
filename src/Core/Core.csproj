@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <AssemblyName>Paraminter.Semantic.Type.Apheleia.Services</AssemblyName>
+        <AssemblyName>Paraminter.Semantic.Type.Apheleia</AssemblyName>
         
-        <PackageId>Paraminter.Semantic.Type.Apheleia.Services</PackageId>
+        <PackageId>Paraminter.Semantic.Type.Apheleia</PackageId>
         <Description>Provides general implementations of services related to a Paraminter associator specialized in semantic type arguments.</Description>
     </PropertyGroup>
 
