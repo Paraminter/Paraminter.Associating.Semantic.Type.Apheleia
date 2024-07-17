@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 
 using System.Collections.Generic;
 
-/// <summary>Represents unassociated semantic type arguments.</summary>
+/// <summary>Represents unassociated semantic type arguments of an invocation.</summary>
 public interface IUnassociatedSemanticTypeInvocationData
 {
     /// <summary>The type parameters of the invocation.</summary>
