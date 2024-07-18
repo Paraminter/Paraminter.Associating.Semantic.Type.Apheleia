@@ -12,5 +12,5 @@ public sealed class Constructor
         Assert.NotNull(result);
     }
 
-    private static SemanticTypeInvocationDataAssociator Target() => new();
+    private static SemanticTypeAssociator Target() => new();
 }

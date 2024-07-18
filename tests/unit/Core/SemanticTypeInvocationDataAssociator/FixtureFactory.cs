@@ -9,7 +9,7 @@ internal static class FixtureFactory
 {
     public static IFixture Create()
     {
-        SemanticTypeInvocationDataAssociator sut = new();
+        SemanticTypeAssociator sut = new();
 
         return new Fixture(sut);
     }
@@ -17,14 +17,14 @@ internal static class FixtureFactory
     private sealed class Fixture
         : IFixture
     {
-        private readonly IQueryHandler<IGetAssociatedInvocationDataQuery<IUnassociatedSemanticTypeInvocationData>, IInvalidatingSemanticTypeAssociationQueryResponseCollector> Sut;
+        private readonly IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticTypeData>, IInvalidatingAssociateSemanticTypeQueryResponseCollector> Sut;
 
         public Fixture(
-            IQueryHandler<IGetAssociatedInvocationDataQuery<IUnassociatedSemanticTypeInvocationData>, IInvalidatingSemanticTypeAssociationQueryResponseCollector> sut)
+            IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticTypeData>, IInvalidatingAssociateSemanticTypeQueryResponseCollector> sut)
         {
             Sut = sut;
         }
 
-        IQueryHandler<IGetAssociatedInvocationDataQuery<IUnassociatedSemanticTypeInvocationData>, IInvalidatingSemanticTypeAssociationQueryResponseCollector> IFixture.Sut => Sut;
+        IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticTypeData>, IInvalidatingAssociateSemanticTypeQueryResponseCollector> IFixture.Sut => Sut;
     }
 }
