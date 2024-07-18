@@ -6,6 +6,7 @@
 
     <ItemGroup>
         <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="4.8.0" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
         <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
 
         <PackageVersion Include="Moq" Version="4.20.70" />
