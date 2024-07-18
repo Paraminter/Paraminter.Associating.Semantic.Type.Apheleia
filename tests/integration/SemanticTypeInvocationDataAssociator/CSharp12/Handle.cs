@@ -45,11 +45,11 @@ public sealed class Handle
 
         var arguments = ((IMethodSymbol)semanticModel.GetSymbolInfo(methodInvocation).Symbol!).TypeArguments;
 
-        Mock<IGetAssociatedInvocationDataQuery<IUnassociatedSemanticTypeInvocationData>> queryMock = new();
-        Mock<IInvalidatingSemanticTypeAssociationQueryResponseCollector> queryResponseCollectorMock = new() { DefaultValue = DefaultValue.Mock };
+        Mock<IAssociateArgumentsQuery<IAssociateSemanticTypeData>> queryMock = new();
+        Mock<IInvalidatingAssociateSemanticTypeQueryResponseCollector> queryResponseCollectorMock = new() { DefaultValue = DefaultValue.Mock };
 
-        queryMock.Setup((query) => query.UnassociatedInvocationData.Parameters).Returns(method.TypeParameters);
-        queryMock.Setup((query) => query.UnassociatedInvocationData.Arguments).Returns(arguments);
+        queryMock.Setup((query) => query.Data.Parameters).Returns(method.TypeParameters);
+        queryMock.Setup((query) => query.Data.Arguments).Returns(arguments);
 
         Target(queryMock.Object, queryResponseCollectorMock.Object);
 
@@ -60,8 +60,8 @@ public sealed class Handle
     }
 
     private void Target(
-        IGetAssociatedInvocationDataQuery<IUnassociatedSemanticTypeInvocationData> query,
-        IInvalidatingSemanticTypeAssociationQueryResponseCollector queryResponseCollector)
+        IAssociateArgumentsQuery<IAssociateSemanticTypeData> query,
+        IInvalidatingAssociateSemanticTypeQueryResponseCollector queryResponseCollector)
     {
         Fixture.Sut.Handle(query, queryResponseCollector);
     }
