@@ -7,7 +7,7 @@ using Paraminter.Semantic.Type.Queries.Collectors;
 
 using System;
 
-/// <summary>Associates semantic type argument.</summary>
+/// <summary>Associates semantic type arguments.</summary>
 public sealed class SemanticTypeAssociator
     : IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticTypeData>, IInvalidatingAssociateSemanticTypeQueryResponseCollector>
 {
