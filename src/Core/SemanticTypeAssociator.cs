@@ -38,9 +38,9 @@ public sealed class SemanticTypeAssociator
         for (var i = 0; i < query.Data.Parameters.Count; i++)
         {
             var parameter = query.Data.Parameters[i];
-            var argumentData = query.Data.Arguments[i];
+            var argument = query.Data.Arguments[i];
 
-            queryResponseCollector.Associations.Add(parameter, argumentData);
+            queryResponseCollector.Associations.Add(parameter, argument);
         }
     }
 }
