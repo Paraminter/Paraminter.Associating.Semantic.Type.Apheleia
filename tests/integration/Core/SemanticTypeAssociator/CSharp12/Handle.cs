@@ -36,11 +36,12 @@ public sealed class Handle
 
         var type = compilation.GetTypeByMetadataName("Foo")!;
         var method = type.GetMembers().OfType<IMethodSymbol>().Single((symbol) => symbol.Name == "Method");
+        var parameters = method.TypeParameters;
 
         var syntaxTree = compilation.SyntaxTrees[0];
         var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-        var invokeMethod = syntaxTree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().Single((method) => method.Identifier.Text == "Invoke");
+        var invokeMethod = syntaxTree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().Single(static (method) => method.Identifier.Text == "Invoke");
         var methodInvocation = invokeMethod.DescendantNodes().OfType<InvocationExpressionSyntax>().Single();
 
         var arguments = ((IMethodSymbol)semanticModel.GetSymbolInfo(methodInvocation).Symbol!).TypeArguments;
@@ -48,14 +49,14 @@ public sealed class Handle
         Mock<IAssociateArgumentsQuery<IAssociateSemanticTypeData>> queryMock = new();
         Mock<IInvalidatingAssociateSemanticTypeQueryResponseCollector> queryResponseCollectorMock = new() { DefaultValue = DefaultValue.Mock };
 
-        queryMock.Setup((query) => query.Data.Parameters).Returns(method.TypeParameters);
+        queryMock.Setup((query) => query.Data.Parameters).Returns(parameters);
         queryMock.Setup((query) => query.Data.Arguments).Returns(arguments);
 
         Target(queryMock.Object, queryResponseCollectorMock.Object);
 
-        queryResponseCollectorMock.Verify((collector) => collector.Associations.Add(method.TypeParameters[0], arguments[0]), Times.Once());
-        queryResponseCollectorMock.Verify((collector) => collector.Associations.Add(method.TypeParameters[1], arguments[1]), Times.Once());
-        queryResponseCollectorMock.Verify((collector) => collector.Associations.Add(method.TypeParameters[2], arguments[2]), Times.Once());
+        queryResponseCollectorMock.Verify((collector) => collector.Associations.Add(parameters[0], arguments[0]), Times.Once());
+        queryResponseCollectorMock.Verify((collector) => collector.Associations.Add(parameters[1], arguments[1]), Times.Once());
+        queryResponseCollectorMock.Verify((collector) => collector.Associations.Add(parameters[2], arguments[2]), Times.Once());
         queryResponseCollectorMock.Verify((collector) => collector.Associations.Add(It.IsAny<ITypeParameterSymbol>(), It.IsAny<ITypeSymbol>()), Times.Exactly(3));
     }
 
