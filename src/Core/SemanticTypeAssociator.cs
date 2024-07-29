@@ -2,35 +2,36 @@
 
 using Paraminter.Associators.Queries;
 using Paraminter.Queries.Handlers;
+using Paraminter.Semantic.Type.Apheleia.Common;
 using Paraminter.Semantic.Type.Apheleia.Queries;
-using Paraminter.Semantic.Type.Queries.Collectors;
+using Paraminter.Semantic.Type.Queries.Handlers;
 
 using System;
 
 /// <summary>Associates semantic type arguments.</summary>
 public sealed class SemanticTypeAssociator
-    : IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticTypeData>, IInvalidatingAssociateSemanticTypeQueryResponseCollector>
+    : IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticTypeData>, IInvalidatingAssociateSemanticTypeQueryResponseHandler>
 {
     /// <summary>Instantiates a <see cref="SemanticTypeAssociator"/>, associating semantic type arguments.</summary>
     public SemanticTypeAssociator() { }
 
-    void IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticTypeData>, IInvalidatingAssociateSemanticTypeQueryResponseCollector>.Handle(
+    void IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticTypeData>, IInvalidatingAssociateSemanticTypeQueryResponseHandler>.Handle(
         IAssociateArgumentsQuery<IAssociateSemanticTypeData> query,
-        IInvalidatingAssociateSemanticTypeQueryResponseCollector queryResponseCollector)
+        IInvalidatingAssociateSemanticTypeQueryResponseHandler queryResponseHandler)
     {
         if (query is null)
         {
             throw new ArgumentNullException(nameof(query));
         }
 
-        if (queryResponseCollector is null)
+        if (queryResponseHandler is null)
         {
-            throw new ArgumentNullException(nameof(queryResponseCollector));
+            throw new ArgumentNullException(nameof(queryResponseHandler));
         }
 
         if (query.Data.Parameters.Count != query.Data.Arguments.Count)
         {
-            queryResponseCollector.Invalidator.Invalidate();
+            queryResponseHandler.Invalidator.Handle(InvalidateQueryResponseCommand.Instance);
 
             return;
         }
@@ -40,7 +41,9 @@ public sealed class SemanticTypeAssociator
             var parameter = query.Data.Parameters[i];
             var argument = query.Data.Arguments[i];
 
-            queryResponseCollector.Associations.Add(parameter, argument);
+            var command = new AddSemanticTypeAssociationCommand(parameter, argument);
+
+            queryResponseHandler.AssociationCollector.Handle(command);
         }
     }
 }
