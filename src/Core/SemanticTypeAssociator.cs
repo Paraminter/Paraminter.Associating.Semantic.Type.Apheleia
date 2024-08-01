@@ -1,49 +1,48 @@
 ﻿namespace Paraminter.Semantic.Type.Apheleia;
 
-using Paraminter.Associators.Queries;
-using Paraminter.Queries.Handlers;
+using Paraminter.Associators.Commands;
+using Paraminter.Commands.Handlers;
+using Paraminter.Semantic.Type.Apheleia.Commands;
 using Paraminter.Semantic.Type.Apheleia.Common;
-using Paraminter.Semantic.Type.Apheleia.Queries;
-using Paraminter.Semantic.Type.Queries.Handlers;
+using Paraminter.Semantic.Type.Commands;
 
 using System;
 
 /// <summary>Associates semantic type arguments.</summary>
 public sealed class SemanticTypeAssociator
-    : IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticTypeData>, IInvalidatingAssociateSemanticTypeQueryResponseHandler>
+    : ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticTypeData>>
 {
+    private readonly ICommandHandler<IRecordSemanticTypeAssociationCommand> Recorder;
+
     /// <summary>Instantiates a <see cref="SemanticTypeAssociator"/>, associating semantic type arguments.</summary>
-    public SemanticTypeAssociator() { }
-
-    void IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticTypeData>, IInvalidatingAssociateSemanticTypeQueryResponseHandler>.Handle(
-        IAssociateArgumentsQuery<IAssociateSemanticTypeData> query,
-        IInvalidatingAssociateSemanticTypeQueryResponseHandler queryResponseHandler)
+    /// <param name="recorder">Records associated semantic type arguments.</param>
+    public SemanticTypeAssociator(
+        ICommandHandler<IRecordSemanticTypeAssociationCommand> recorder)
     {
-        if (query is null)
+        Recorder = recorder ?? throw new ArgumentNullException(nameof(recorder));
+    }
+
+    void ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticTypeData>>.Handle(
+        IAssociateArgumentsCommand<IAssociateSemanticTypeData> command)
+    {
+        if (command is null)
         {
-            throw new ArgumentNullException(nameof(query));
+            throw new ArgumentNullException(nameof(command));
         }
 
-        if (queryResponseHandler is null)
+        if (command.Data.Parameters.Count != command.Data.Arguments.Count)
         {
-            throw new ArgumentNullException(nameof(queryResponseHandler));
-        }
-
-        if (query.Data.Parameters.Count != query.Data.Arguments.Count)
-        {
-            queryResponseHandler.Invalidator.Handle(InvalidateQueryResponseCommand.Instance);
-
             return;
         }
 
-        for (var i = 0; i < query.Data.Parameters.Count; i++)
+        for (var i = 0; i < command.Data.Parameters.Count; i++)
         {
-            var parameter = query.Data.Parameters[i];
-            var argument = query.Data.Arguments[i];
+            var parameter = command.Data.Parameters[i];
+            var argument = command.Data.Arguments[i];
 
-            var command = new AddSemanticTypeAssociationCommand(parameter, argument);
+            var recordCommand = new RecordSemanticTypeAssociationCommand(parameter, argument);
 
-            queryResponseHandler.AssociationCollector.Handle(command);
+            Recorder.Handle(recordCommand);
         }
     }
 }

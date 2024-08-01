@@ -4,11 +4,10 @@ using Microsoft.CodeAnalysis;
 
 using Moq;
 
-using Paraminter.Associators.Queries;
-using Paraminter.Queries.Invalidation.Commands;
-using Paraminter.Semantic.Type.Apheleia.Queries;
+using Paraminter.Associators.Commands;
+using Paraminter.Commands.Handlers;
+using Paraminter.Semantic.Type.Apheleia.Commands;
 using Paraminter.Semantic.Type.Commands;
-using Paraminter.Semantic.Type.Queries.Handlers;
 
 using System;
 using System.Linq.Expressions;
@@ -20,52 +19,41 @@ public sealed class Handle
     private readonly IFixture Fixture = FixtureFactory.Create();
 
     [Fact]
-    public void NullQuery_ThrowsArgumentNullException()
+    public void NullCommand_ThrowsArgumentNullException()
     {
-        var result = Record.Exception(() => Target(null!, Mock.Of<IInvalidatingAssociateSemanticTypeQueryResponseHandler>()));
+        var result = Record.Exception(() => Target(null!));
 
         Assert.IsType<ArgumentNullException>(result);
     }
 
     [Fact]
-    public void NullQueryResponseCollector_ThrowsArgumentNullException()
+    public void DifferentNumberOfParametersAndArguments_RecordsNone()
     {
-        var result = Record.Exception(() => Target(Mock.Of<IAssociateArgumentsQuery<IAssociateSemanticTypeData>>(), null!));
+        Mock<IAssociateArgumentsCommand<IAssociateSemanticTypeData>> commandMock = new();
 
-        Assert.IsType<ArgumentNullException>(result);
+        commandMock.Setup(static (command) => command.Data.Parameters).Returns([]);
+        commandMock.Setup(static (command) => command.Data.Arguments).Returns([Mock.Of<ITypeSymbol>()]);
+
+        Target(commandMock.Object);
+
+        Fixture.RecorderMock.Verify(static (recorder) => recorder.Handle(It.IsAny<IRecordSemanticTypeAssociationCommand>()), Times.Never());
     }
 
     [Fact]
-    public void DifferentNumberOfParametersAndArguments_Invalidates()
+    public void NoParametersOrArguments_RecordsNone()
     {
-        Mock<IAssociateArgumentsQuery<IAssociateSemanticTypeData>> queryMock = new();
-        Mock<IInvalidatingAssociateSemanticTypeQueryResponseHandler> queryResponseHandlerMock = new() { DefaultValue = DefaultValue.Mock };
+        Mock<IAssociateArgumentsCommand<IAssociateSemanticTypeData>> commandMock = new();
 
-        queryMock.Setup(static (query) => query.Data.Parameters).Returns([]);
-        queryMock.Setup(static (query) => query.Data.Arguments).Returns([Mock.Of<ITypeSymbol>()]);
+        commandMock.Setup(static (command) => command.Data.Parameters).Returns([]);
+        commandMock.Setup(static (command) => command.Data.Arguments).Returns([]);
 
-        Target(queryMock.Object, queryResponseHandlerMock.Object);
+        Target(commandMock.Object);
 
-        queryResponseHandlerMock.Verify(static (handler) => handler.Invalidator.Handle(It.IsAny<IInvalidateQueryResponseCommand>()), Times.Once());
+        Fixture.RecorderMock.Verify(static (recorder) => recorder.Handle(It.IsAny<IRecordSemanticTypeAssociationCommand>()), Times.Never());
     }
 
     [Fact]
-    public void NoParametersOrArguments_AddsNone()
-    {
-        Mock<IAssociateArgumentsQuery<IAssociateSemanticTypeData>> queryMock = new();
-        Mock<IInvalidatingAssociateSemanticTypeQueryResponseHandler> queryResponseHandlerMock = new() { DefaultValue = DefaultValue.Mock };
-
-        queryMock.Setup(static (query) => query.Data.Parameters).Returns([]);
-        queryMock.Setup(static (query) => query.Data.Arguments).Returns([]);
-
-        Target(queryMock.Object, queryResponseHandlerMock.Object);
-
-        queryResponseHandlerMock.Verify(static (handler) => handler.Invalidator.Handle(It.IsAny<IInvalidateQueryResponseCommand>()), Times.Never());
-        queryResponseHandlerMock.Verify(static (handler) => handler.AssociationCollector.Handle(It.IsAny<IAddSemanticTypeAssociationCommand>()), Times.Never());
-    }
-
-    [Fact]
-    public void SameNumberOfParametersAndArguments_AddsAllPairwise()
+    public void SameNumberOfParametersAndArguments_RecordsAllPairwise()
     {
         var parameter1 = Mock.Of<ITypeParameterSymbol>();
         var parameter2 = Mock.Of<ITypeParameterSymbol>();
@@ -73,28 +61,26 @@ public sealed class Handle
         var argument1 = Mock.Of<ITypeSymbol>();
         var argument2 = Mock.Of<ITypeSymbol>();
 
-        Mock<IAssociateArgumentsQuery<IAssociateSemanticTypeData>> queryMock = new();
-        Mock<IInvalidatingAssociateSemanticTypeQueryResponseHandler> queryResponseHandlerMock = new() { DefaultValue = DefaultValue.Mock };
+        Mock<IAssociateArgumentsCommand<IAssociateSemanticTypeData>> commandMock = new();
 
-        queryMock.Setup((query) => query.Data.Parameters).Returns([parameter1, parameter2]);
-        queryMock.Setup((query) => query.Data.Arguments).Returns([argument1, argument2]);
+        commandMock.Setup((command) => command.Data.Parameters).Returns([parameter1, parameter2]);
+        commandMock.Setup((command) => command.Data.Arguments).Returns([argument1, argument2]);
 
-        Target(queryMock.Object, queryResponseHandlerMock.Object);
+        Target(commandMock.Object);
 
-        queryResponseHandlerMock.Verify(static (handler) => handler.Invalidator.Handle(It.IsAny<IInvalidateQueryResponseCommand>()), Times.Never());
-        queryResponseHandlerMock.Verify(static (handler) => handler.AssociationCollector.Handle(It.IsAny<IAddSemanticTypeAssociationCommand>()), Times.Exactly(2));
-        queryResponseHandlerMock.Verify(AssociationExpression(parameter1, argument1), Times.Once());
-        queryResponseHandlerMock.Verify(AssociationExpression(parameter2, argument2), Times.Once());
+        Fixture.RecorderMock.Verify(static (recorder) => recorder.Handle(It.IsAny<IRecordSemanticTypeAssociationCommand>()), Times.Exactly(2));
+        Fixture.RecorderMock.Verify(RecordExpression(parameter1, argument1), Times.Once());
+        Fixture.RecorderMock.Verify(RecordExpression(parameter2, argument2), Times.Once());
     }
 
-    private static Expression<Action<IInvalidatingAssociateSemanticTypeQueryResponseHandler>> AssociationExpression(
+    private static Expression<Action<ICommandHandler<IRecordSemanticTypeAssociationCommand>>> RecordExpression(
         ITypeParameterSymbol parameter,
         ITypeSymbol argument)
     {
-        return (handler) => handler.AssociationCollector.Handle(It.Is(MatchAssociationCommand(parameter, argument)));
+        return (recorder) => recorder.Handle(It.Is(MatchRecordCommand(parameter, argument)));
     }
 
-    private static Expression<Func<IAddSemanticTypeAssociationCommand, bool>> MatchAssociationCommand(
+    private static Expression<Func<IRecordSemanticTypeAssociationCommand, bool>> MatchRecordCommand(
         ITypeParameterSymbol parameter,
         ITypeSymbol argument)
     {
@@ -102,9 +88,8 @@ public sealed class Handle
     }
 
     private void Target(
-        IAssociateArgumentsQuery<IAssociateSemanticTypeData> query,
-        IInvalidatingAssociateSemanticTypeQueryResponseHandler queryResponseHandler)
+        IAssociateArgumentsCommand<IAssociateSemanticTypeData> command)
     {
-        Fixture.Sut.Handle(query, queryResponseHandler);
+        Fixture.Sut.Handle(command);
     }
 }

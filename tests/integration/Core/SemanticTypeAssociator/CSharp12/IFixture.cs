@@ -1,11 +1,15 @@
 ﻿namespace Paraminter.Semantic.Type.Apheleia;
 
-using Paraminter.Associators.Queries;
-using Paraminter.Queries.Handlers;
-using Paraminter.Semantic.Type.Apheleia.Queries;
-using Paraminter.Semantic.Type.Queries.Handlers;
+using Moq;
+
+using Paraminter.Associators.Commands;
+using Paraminter.Commands.Handlers;
+using Paraminter.Semantic.Type.Apheleia.Commands;
+using Paraminter.Semantic.Type.Commands;
 
 internal interface IFixture
 {
-    public abstract IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticTypeData>, IInvalidatingAssociateSemanticTypeQueryResponseHandler> Sut { get; }
+    public abstract ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticTypeData>> Sut { get; }
+
+    public abstract Mock<ICommandHandler<IRecordSemanticTypeAssociationCommand>> RecorderMock { get; }
 }

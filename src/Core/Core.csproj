@@ -8,10 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Paraminter.Associators.Queries" />
-        <PackageReference Include="Paraminter.Semantic.Type.Common.Queries.Handlers" />
+        <PackageReference Include="Paraminter.Associators.Commands" />
+        <PackageReference Include="Paraminter.Commands.Handlers" />
+        <PackageReference Include="Paraminter.Semantic.Type.Common.Commands" />
 
-        <ProjectReference Include="$(SolutionDir)\src\Queries\Queries.csproj" />
+        <ProjectReference Include="$(SolutionDir)\src\Commands\Commands.csproj" />
     </ItemGroup>
 
 </Project>

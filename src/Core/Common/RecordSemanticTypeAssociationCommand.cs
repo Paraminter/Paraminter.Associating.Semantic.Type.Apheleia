@@ -4,13 +4,13 @@ using Microsoft.CodeAnalysis;
 
 using Paraminter.Semantic.Type.Commands;
 
-internal sealed class AddSemanticTypeAssociationCommand
-    : IAddSemanticTypeAssociationCommand
+internal sealed class RecordSemanticTypeAssociationCommand
+    : IRecordSemanticTypeAssociationCommand
 {
     private readonly ITypeParameterSymbol Parameter;
     private readonly ITypeSymbol Argument;
 
-    public AddSemanticTypeAssociationCommand(
+    public RecordSemanticTypeAssociationCommand(
         ITypeParameterSymbol parameter,
         ITypeSymbol argument)
     {
@@ -18,6 +18,6 @@ internal sealed class AddSemanticTypeAssociationCommand
         Argument = argument;
     }
 
-    ITypeParameterSymbol IAddSemanticTypeAssociationCommand.Parameter => Parameter;
-    ITypeSymbol IAddSemanticTypeAssociationCommand.Argument => Argument;
+    ITypeParameterSymbol IRecordSemanticTypeAssociationCommand.Parameter => Parameter;
+    ITypeSymbol IRecordSemanticTypeAssociationCommand.Argument => Argument;
 }
