@@ -1,4 +1,4 @@
-﻿namespace Paraminter.Semantic.Type.Apheleia.Queries;
+﻿namespace Paraminter.Semantic.Type.Apheleia.Commands;
 
 using Microsoft.CodeAnalysis;
 

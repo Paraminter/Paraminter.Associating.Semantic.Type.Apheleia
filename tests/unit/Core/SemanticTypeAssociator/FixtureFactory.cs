@@ -1,30 +1,41 @@
 ﻿namespace Paraminter.Semantic.Type.Apheleia;
 
-using Paraminter.Associators.Queries;
-using Paraminter.Queries.Handlers;
-using Paraminter.Semantic.Type.Apheleia.Queries;
-using Paraminter.Semantic.Type.Queries.Handlers;
+using Moq;
+
+using Paraminter.Associators.Commands;
+using Paraminter.Commands.Handlers;
+using Paraminter.Semantic.Type.Apheleia.Commands;
+using Paraminter.Semantic.Type.Commands;
 
 internal static class FixtureFactory
 {
     public static IFixture Create()
     {
-        SemanticTypeAssociator sut = new();
+        Mock<ICommandHandler<IRecordSemanticTypeAssociationCommand>> recorderMock = new();
 
-        return new Fixture(sut);
+        SemanticTypeAssociator sut = new(recorderMock.Object);
+
+        return new Fixture(sut, recorderMock);
     }
 
     private sealed class Fixture
         : IFixture
     {
-        private readonly IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticTypeData>, IInvalidatingAssociateSemanticTypeQueryResponseHandler> Sut;
+        private readonly ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticTypeData>> Sut;
+
+        private readonly Mock<ICommandHandler<IRecordSemanticTypeAssociationCommand>> RecorderMock;
 
         public Fixture(
-            IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticTypeData>, IInvalidatingAssociateSemanticTypeQueryResponseHandler> sut)
+            ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticTypeData>> sut,
+            Mock<ICommandHandler<IRecordSemanticTypeAssociationCommand>> recorderMock)
         {
             Sut = sut;
+
+            RecorderMock = recorderMock;
         }
 
-        IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticTypeData>, IInvalidatingAssociateSemanticTypeQueryResponseHandler> IFixture.Sut => Sut;
+        ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticTypeData>> IFixture.Sut => Sut;
+
+        Mock<ICommandHandler<IRecordSemanticTypeAssociationCommand>> IFixture.RecorderMock => RecorderMock;
     }
 }
