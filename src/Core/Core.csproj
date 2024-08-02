@@ -8,11 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Paraminter.Arguments.Semantic.Type.Models" />
         <PackageReference Include="Paraminter.Associators.Commands" />
+        <PackageReference Include="Paraminter.Associators.Queries" />
         <PackageReference Include="Paraminter.Commands.Handlers" />
-        <PackageReference Include="Paraminter.Semantic.Type.Common.Commands" />
+        <PackageReference Include="Paraminter.Parameters.Type.Models" />
+        <PackageReference Include="Paraminter.Queries.Handlers" />
 
-        <ProjectReference Include="$(SolutionDir)\src\Commands\Commands.csproj" />
+        <ProjectReference Include="$(SolutionDir)\src\Models\Models.csproj" />
     </ItemGroup>
 
 </Project>

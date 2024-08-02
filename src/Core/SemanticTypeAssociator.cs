@@ -1,10 +1,11 @@
 ﻿namespace Paraminter.Semantic.Type.Apheleia;
 
+using Paraminter.Arguments.Semantic.Type.Models;
 using Paraminter.Associators.Commands;
 using Paraminter.Commands.Handlers;
-using Paraminter.Semantic.Type.Apheleia.Commands;
+using Paraminter.Parameters.Type.Models;
 using Paraminter.Semantic.Type.Apheleia.Common;
-using Paraminter.Semantic.Type.Commands;
+using Paraminter.Semantic.Type.Apheleia.Models;
 
 using System;
 
@@ -12,14 +13,18 @@ using System;
 public sealed class SemanticTypeAssociator
     : ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticTypeData>>
 {
-    private readonly ICommandHandler<IRecordSemanticTypeAssociationCommand> Recorder;
+    private readonly ICommandHandler<IRecordArgumentAssociationCommand<ITypeParameter, ISemanticTypeArgumentData>> Recorder;
+    private readonly ICommandHandler<IInvalidateArgumentAssociationsRecordCommand> Invalidator;
 
     /// <summary>Instantiates a <see cref="SemanticTypeAssociator"/>, associating semantic type arguments.</summary>
     /// <param name="recorder">Records associated semantic type arguments.</param>
+    /// <param name="invalidator">Invalidates the record of associated semantic type arguments.</param>
     public SemanticTypeAssociator(
-        ICommandHandler<IRecordSemanticTypeAssociationCommand> recorder)
+        ICommandHandler<IRecordArgumentAssociationCommand<ITypeParameter, ISemanticTypeArgumentData>> recorder,
+        ICommandHandler<IInvalidateArgumentAssociationsRecordCommand> invalidator)
     {
         Recorder = recorder ?? throw new ArgumentNullException(nameof(recorder));
+        Invalidator = invalidator ?? throw new ArgumentNullException(nameof(invalidator));
     }
 
     void ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticTypeData>>.Handle(
@@ -32,15 +37,17 @@ public sealed class SemanticTypeAssociator
 
         if (command.Data.Parameters.Count != command.Data.Arguments.Count)
         {
+            Invalidator.Handle(InvalidateArgumentAssociationsRecordCommand.Instance);
+
             return;
         }
 
         for (var i = 0; i < command.Data.Parameters.Count; i++)
         {
-            var parameter = command.Data.Parameters[i];
-            var argument = command.Data.Arguments[i];
+            var parameter = new TypeParameter(command.Data.Parameters[i]);
+            var argumentData = new SemanticTypeArgumentData(command.Data.Arguments[i]);
 
-            var recordCommand = new RecordSemanticTypeAssociationCommand(parameter, argument);
+            var recordCommand = new RecordSemanticTypeAssociationCommand(parameter, argumentData);
 
             Recorder.Handle(recordCommand);
         }
