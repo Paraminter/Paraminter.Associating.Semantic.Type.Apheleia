@@ -8,8 +8,8 @@
         <PackageReference Include="xunit" />
         <PackageReference Include="xunit.runner.visualstudio" />
 
-        <ProjectReference Include="$(SolutionDir)\src\Commands\Commands.csproj" />
         <ProjectReference Include="$(SolutionDir)\src\Core\Core.csproj" />
+        <ProjectReference Include="$(SolutionDir)\src\Models\Models.csproj" />
     </ItemGroup>
 
 </Project>

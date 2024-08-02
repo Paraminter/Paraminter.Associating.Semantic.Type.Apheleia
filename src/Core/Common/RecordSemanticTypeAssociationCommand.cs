@@ -1,23 +1,23 @@
 ﻿namespace Paraminter.Semantic.Type.Apheleia.Common;
 
-using Microsoft.CodeAnalysis;
-
-using Paraminter.Semantic.Type.Commands;
+using Paraminter.Arguments.Semantic.Type.Models;
+using Paraminter.Associators.Commands;
+using Paraminter.Parameters.Type.Models;
 
 internal sealed class RecordSemanticTypeAssociationCommand
-    : IRecordSemanticTypeAssociationCommand
+    : IRecordArgumentAssociationCommand<ITypeParameter, ISemanticTypeArgumentData>
 {
-    private readonly ITypeParameterSymbol Parameter;
-    private readonly ITypeSymbol Argument;
+    private readonly ITypeParameter Parameter;
+    private readonly ISemanticTypeArgumentData ArgumentData;
 
     public RecordSemanticTypeAssociationCommand(
-        ITypeParameterSymbol parameter,
-        ITypeSymbol argument)
+        ITypeParameter parameter,
+        ISemanticTypeArgumentData argumentData)
     {
         Parameter = parameter;
-        Argument = argument;
+        ArgumentData = argumentData;
     }
 
-    ITypeParameterSymbol IRecordSemanticTypeAssociationCommand.Parameter => Parameter;
-    ITypeSymbol IRecordSemanticTypeAssociationCommand.Argument => Argument;
+    ITypeParameter IRecordArgumentAssociationCommand<ITypeParameter, ISemanticTypeArgumentData>.Parameter => Parameter;
+    ISemanticTypeArgumentData IRecordArgumentAssociationCommand<ITypeParameter, ISemanticTypeArgumentData>.ArgumentData => ArgumentData;
 }

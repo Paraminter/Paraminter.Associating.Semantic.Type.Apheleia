@@ -4,10 +4,11 @@ using Microsoft.CodeAnalysis;
 
 using Moq;
 
+using Paraminter.Arguments.Semantic.Type.Models;
 using Paraminter.Associators.Commands;
 using Paraminter.Commands.Handlers;
-using Paraminter.Semantic.Type.Apheleia.Commands;
-using Paraminter.Semantic.Type.Commands;
+using Paraminter.Parameters.Type.Models;
+using Paraminter.Semantic.Type.Apheleia.Models;
 
 using System;
 using System.Linq.Expressions;
@@ -27,7 +28,7 @@ public sealed class Handle
     }
 
     [Fact]
-    public void DifferentNumberOfParametersAndArguments_RecordsNone()
+    public void DifferentNumberOfParametersAndArguments_Invalidates()
     {
         Mock<IAssociateArgumentsCommand<IAssociateSemanticTypeData>> commandMock = new();
 
@@ -36,7 +37,7 @@ public sealed class Handle
 
         Target(commandMock.Object);
 
-        Fixture.RecorderMock.Verify(static (recorder) => recorder.Handle(It.IsAny<IRecordSemanticTypeAssociationCommand>()), Times.Never());
+        Fixture.InvalidatorMock.Verify(static (invalidator) => invalidator.Handle(It.IsAny<IInvalidateArgumentAssociationsRecordCommand>()), Times.AtLeastOnce());
     }
 
     [Fact]
@@ -49,7 +50,9 @@ public sealed class Handle
 
         Target(commandMock.Object);
 
-        Fixture.RecorderMock.Verify(static (recorder) => recorder.Handle(It.IsAny<IRecordSemanticTypeAssociationCommand>()), Times.Never());
+        Fixture.InvalidatorMock.Verify(static (invalidator) => invalidator.Handle(It.IsAny<IInvalidateArgumentAssociationsRecordCommand>()), Times.Never());
+
+        Fixture.RecorderMock.Verify(static (recorder) => recorder.Handle(It.IsAny<IRecordArgumentAssociationCommand<ITypeParameter, ISemanticTypeArgumentData>>()), Times.Never());
     }
 
     [Fact]
@@ -68,23 +71,39 @@ public sealed class Handle
 
         Target(commandMock.Object);
 
-        Fixture.RecorderMock.Verify(static (recorder) => recorder.Handle(It.IsAny<IRecordSemanticTypeAssociationCommand>()), Times.Exactly(2));
+        Fixture.InvalidatorMock.Verify(static (invalidator) => invalidator.Handle(It.IsAny<IInvalidateArgumentAssociationsRecordCommand>()), Times.Never());
+
+        Fixture.RecorderMock.Verify(static (recorder) => recorder.Handle(It.IsAny<IRecordArgumentAssociationCommand<ITypeParameter, ISemanticTypeArgumentData>>()), Times.Exactly(2));
         Fixture.RecorderMock.Verify(RecordExpression(parameter1, argument1), Times.Once());
         Fixture.RecorderMock.Verify(RecordExpression(parameter2, argument2), Times.Once());
     }
 
-    private static Expression<Action<ICommandHandler<IRecordSemanticTypeAssociationCommand>>> RecordExpression(
-        ITypeParameterSymbol parameter,
-        ITypeSymbol argument)
+    private static Expression<Action<ICommandHandler<IRecordArgumentAssociationCommand<ITypeParameter, ISemanticTypeArgumentData>>>> RecordExpression(
+        ITypeParameterSymbol parameterSymbol,
+        ITypeSymbol argumentSymbol)
     {
-        return (recorder) => recorder.Handle(It.Is(MatchRecordCommand(parameter, argument)));
+        return (recorder) => recorder.Handle(It.Is(MatchRecordCommand(parameterSymbol, argumentSymbol)));
     }
 
-    private static Expression<Func<IRecordSemanticTypeAssociationCommand, bool>> MatchRecordCommand(
-        ITypeParameterSymbol parameter,
-        ITypeSymbol argument)
+    private static Expression<Func<IRecordArgumentAssociationCommand<ITypeParameter, ISemanticTypeArgumentData>, bool>> MatchRecordCommand(
+        ITypeParameterSymbol parameterSymbol,
+        ITypeSymbol argumentSymbol)
     {
-        return (command) => ReferenceEquals(command.Parameter, parameter) && ReferenceEquals(command.Argument, argument);
+        return (command) => MatchParameter(parameterSymbol, command.Parameter) && MatchArgumentData(argumentSymbol, command.ArgumentData);
+    }
+
+    private static bool MatchParameter(
+        ITypeParameterSymbol parameterSymbol,
+        ITypeParameter parameter)
+    {
+        return ReferenceEquals(parameterSymbol, parameter.Symbol);
+    }
+
+    private static bool MatchArgumentData(
+        ITypeSymbol argumentSymbol,
+        ISemanticTypeArgumentData argumentData)
+    {
+        return ReferenceEquals(argumentSymbol, argumentData.Symbol);
     }
 
     private void Target(

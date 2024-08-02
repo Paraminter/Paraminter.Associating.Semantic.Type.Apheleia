@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <AssemblyName>Paraminter.Semantic.Type.Apheleia.Models</AssemblyName>
+
+        <RootNamespace>Paraminter.Semantic.Type.Apheleia.Models</RootNamespace>
+        
+        <PackageId>Paraminter.Semantic.Type.Apheleia.Models</PackageId>
+        <Description>Defines models for a Paraminter associator specialized in semantic type arguments.</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" />
+    </ItemGroup>
+
+</Project>
