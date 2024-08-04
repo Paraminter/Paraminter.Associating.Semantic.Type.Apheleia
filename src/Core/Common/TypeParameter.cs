@@ -7,9 +7,9 @@ using Paraminter.Parameters.Type.Models;
 internal sealed class TypeParameter
     : ITypeParameter
 {
-    private ITypeParameterSymbol Symbol = null!;
+    private readonly ITypeParameterSymbol Symbol;
 
-    public void Change(
+    public TypeParameter(
         ITypeParameterSymbol symbol)
     {
         Symbol = symbol;

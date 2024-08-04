@@ -42,12 +42,9 @@ public sealed class SemanticTypeAssociator
             return;
         }
 
-        var parameter = new TypeParameter();
-
         for (var i = 0; i < command.Data.Parameters.Count; i++)
         {
-            parameter.Change(command.Data.Parameters[i]);
-
+            var parameter = new TypeParameter(command.Data.Parameters[i]);
             var argumentData = new SemanticTypeArgumentData(command.Data.Arguments[i]);
 
             var recordCommand = new RecordSemanticTypeAssociationCommand(parameter, argumentData);
