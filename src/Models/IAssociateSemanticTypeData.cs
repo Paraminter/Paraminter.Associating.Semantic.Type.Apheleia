@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 
 using System.Collections.Generic;
 
-/// <summary>Represents data used to associate semantic type arguments with parameters.</summary>
+/// <summary>Represents data used to associate semantic type arguments.</summary>
 public interface IAssociateSemanticTypeData
 {
     /// <summary>The type parameters.</summary>
