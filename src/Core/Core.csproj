@@ -4,7 +4,7 @@
         <AssemblyName>Paraminter.Semantic.Type.Apheleia</AssemblyName>
         
         <PackageId>Paraminter.Semantic.Type.Apheleia</PackageId>
-        <Description>Provides general implementations of services related to a Paraminter associator of semantic type arguments.</Description>
+        <Description>Provides a Paraminter associator of semantic type arguments.</Description>
     </PropertyGroup>
 
     <ItemGroup>
