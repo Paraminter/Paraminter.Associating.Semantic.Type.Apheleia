@@ -11,6 +11,8 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.Common" />
+
+        <PackageReference Include="Paraminter.Associators.Models" />
     </ItemGroup>
 
 </Project>
