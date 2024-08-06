@@ -2,10 +2,13 @@
 
 using Microsoft.CodeAnalysis;
 
+using Paraminter.Associators.Models;
+
 using System.Collections.Generic;
 
 /// <summary>Represents data used to associate semantic type arguments.</summary>
 public interface IAssociateSemanticTypeData
+    : IAssociateArgumentsData
 {
     /// <summary>The type parameters.</summary>
     public abstract IReadOnlyList<ITypeParameterSymbol> Parameters { get; }
