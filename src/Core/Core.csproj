@@ -12,6 +12,7 @@
         <PackageReference Include="Paraminter.Associators.Commands" />
         <PackageReference Include="Paraminter.Commands.Handlers" />
         <PackageReference Include="Paraminter.Parameters.Type.Models" />
+        <PackageReference Include="Paraminter.Recorders.Commands" />
 
         <ProjectReference Include="$(SolutionDir)\src\Models\Models.csproj" />
     </ItemGroup>

@@ -1,8 +1,8 @@
 ﻿namespace Paraminter.Semantic.Type.Apheleia.Common;
 
 using Paraminter.Arguments.Semantic.Type.Models;
-using Paraminter.Associators.Commands;
 using Paraminter.Parameters.Type.Models;
+using Paraminter.Recorders.Commands;
 
 internal sealed class RecordSemanticTypeAssociationCommand
     : IRecordArgumentAssociationCommand<ITypeParameter, ISemanticTypeArgumentData>
