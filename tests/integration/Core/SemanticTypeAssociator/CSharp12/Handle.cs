@@ -6,8 +6,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Moq;
 
 using Paraminter.Arguments.Semantic.Type.Models;
-using Paraminter.Associators.Commands;
-using Paraminter.Commands.Handlers;
+using Paraminter.Commands;
+using Paraminter.Cqs.Handlers;
 using Paraminter.Parameters.Type.Models;
 using Paraminter.Recorders.Commands;
 using Paraminter.Semantic.Type.Apheleia.Models;

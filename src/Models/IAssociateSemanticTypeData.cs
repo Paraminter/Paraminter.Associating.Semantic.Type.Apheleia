@@ -2,7 +2,7 @@
 
 using Microsoft.CodeAnalysis;
 
-using Paraminter.Associators.Models;
+using Paraminter.Models;
 
 using System.Collections.Generic;
 

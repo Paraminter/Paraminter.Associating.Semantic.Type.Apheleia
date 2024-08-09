@@ -9,8 +9,8 @@
 
     <ItemGroup>
         <PackageReference Include="Paraminter.Arguments.Semantic.Type.Models" />
-        <PackageReference Include="Paraminter.Associators.Commands" />
-        <PackageReference Include="Paraminter.Commands.Handlers" />
+        <PackageReference Include="Paraminter.Commands" />
+        <PackageReference Include="Paraminter.Cqs.Commands.Handlers" />
         <PackageReference Include="Paraminter.Parameters.Type.Models" />
         <PackageReference Include="Paraminter.Recorders.Commands" />
 
