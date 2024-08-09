@@ -1,4 +1,4 @@
-﻿namespace Paraminter.Semantic.Type.Apheleia.Common;
+﻿namespace Paraminter.Semantic.Type.Apheleia.Models;
 
 using Microsoft.CodeAnalysis;
 

@@ -5,7 +5,7 @@ using Paraminter.Commands;
 using Paraminter.Cqs.Handlers;
 using Paraminter.Parameters.Type.Models;
 using Paraminter.Recorders.Commands;
-using Paraminter.Semantic.Type.Apheleia.Common;
+using Paraminter.Semantic.Type.Apheleia.Commands;
 using Paraminter.Semantic.Type.Apheleia.Models;
 
 using System;
