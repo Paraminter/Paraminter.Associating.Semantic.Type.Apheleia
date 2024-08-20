@@ -8,7 +8,7 @@ using Paraminter.Arguments.Semantic.Type.Models;
 using Paraminter.Commands;
 using Paraminter.Cqs.Handlers;
 using Paraminter.Parameters.Type.Models;
-using Paraminter.Recorders.Commands;
+using Paraminter.Semantic.Type.Apheleia.Errors.Commands;
 using Paraminter.Semantic.Type.Apheleia.Models;
 
 using System;
@@ -29,35 +29,35 @@ public sealed class Handle
     }
 
     [Fact]
-    public void DifferentNumberOfParametersAndArguments_Invalidates()
+    public void DifferentNumberOfParametersAndArguments_HandlesError()
     {
-        Mock<IAssociateArgumentsCommand<IAssociateSemanticTypeData>> commandMock = new();
+        Mock<IAssociateAllArgumentsCommand<IAssociateAllSemanticTypeArgumentsData>> commandMock = new();
 
         commandMock.Setup(static (command) => command.Data.Parameters).Returns([]);
         commandMock.Setup(static (command) => command.Data.Arguments).Returns([Mock.Of<ITypeSymbol>()]);
 
         Target(commandMock.Object);
 
-        Fixture.InvalidatorMock.Verify(static (invalidator) => invalidator.Handle(It.IsAny<IInvalidateArgumentAssociationsRecordCommand>()), Times.AtLeastOnce());
+        Fixture.ErrorHandlerMock.Verify(static (handler) => handler.DifferentNumberOfArgumentsAndParameters.Handle(It.IsAny<IHandleDifferentNumberOfArgumentsAndParametersCommand>()), Times.Once());
     }
 
     [Fact]
-    public void NoParametersOrArguments_RecordsNone()
+    public void NoParametersOrArguments_AssociatesNone()
     {
-        Mock<IAssociateArgumentsCommand<IAssociateSemanticTypeData>> commandMock = new();
+        Mock<IAssociateAllArgumentsCommand<IAssociateAllSemanticTypeArgumentsData>> commandMock = new();
 
         commandMock.Setup(static (command) => command.Data.Parameters).Returns([]);
         commandMock.Setup(static (command) => command.Data.Arguments).Returns([]);
 
         Target(commandMock.Object);
 
-        Fixture.InvalidatorMock.Verify(static (invalidator) => invalidator.Handle(It.IsAny<IInvalidateArgumentAssociationsRecordCommand>()), Times.Never());
+        Fixture.ErrorHandlerMock.Verify(static (handler) => handler.DifferentNumberOfArgumentsAndParameters.Handle(It.IsAny<IHandleDifferentNumberOfArgumentsAndParametersCommand>()), Times.Never());
 
-        Fixture.RecorderMock.Verify(static (recorder) => recorder.Handle(It.IsAny<IRecordArgumentAssociationCommand<ITypeParameter, ISemanticTypeArgumentData>>()), Times.Never());
+        Fixture.IndividualAssociatorMock.Verify(static (associator) => associator.Handle(It.IsAny<IAssociateSingleArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>>()), Times.Never());
     }
 
     [Fact]
-    public void SameNumberOfParametersAndArguments_RecordsAllPairwise()
+    public void SameNumberOfParametersAndArguments_AssociatesAllPairwise()
     {
         var parameter1 = Mock.Of<ITypeParameterSymbol>();
         var parameter2 = Mock.Of<ITypeParameterSymbol>();
@@ -65,28 +65,28 @@ public sealed class Handle
         var argument1 = Mock.Of<ITypeSymbol>();
         var argument2 = Mock.Of<ITypeSymbol>();
 
-        Mock<IAssociateArgumentsCommand<IAssociateSemanticTypeData>> commandMock = new();
+        Mock<IAssociateAllArgumentsCommand<IAssociateAllSemanticTypeArgumentsData>> commandMock = new();
 
         commandMock.Setup((command) => command.Data.Parameters).Returns([parameter1, parameter2]);
         commandMock.Setup((command) => command.Data.Arguments).Returns([argument1, argument2]);
 
         Target(commandMock.Object);
 
-        Fixture.InvalidatorMock.Verify(static (invalidator) => invalidator.Handle(It.IsAny<IInvalidateArgumentAssociationsRecordCommand>()), Times.Never());
+        Fixture.ErrorHandlerMock.Verify(static (handler) => handler.DifferentNumberOfArgumentsAndParameters.Handle(It.IsAny<IHandleDifferentNumberOfArgumentsAndParametersCommand>()), Times.Never());
 
-        Fixture.RecorderMock.Verify(static (recorder) => recorder.Handle(It.IsAny<IRecordArgumentAssociationCommand<ITypeParameter, ISemanticTypeArgumentData>>()), Times.Exactly(2));
-        Fixture.RecorderMock.Verify(RecordExpression(parameter1, argument1), Times.Once());
-        Fixture.RecorderMock.Verify(RecordExpression(parameter2, argument2), Times.Once());
+        Fixture.IndividualAssociatorMock.Verify(static (associator) => associator.Handle(It.IsAny<IAssociateSingleArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>>()), Times.Exactly(2));
+        Fixture.IndividualAssociatorMock.Verify(AssociateIndividualExpression(parameter1, argument1), Times.Once());
+        Fixture.IndividualAssociatorMock.Verify(AssociateIndividualExpression(parameter2, argument2), Times.Once());
     }
 
-    private static Expression<Action<ICommandHandler<IRecordArgumentAssociationCommand<ITypeParameter, ISemanticTypeArgumentData>>>> RecordExpression(
+    private static Expression<Action<ICommandHandler<IAssociateSingleArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>>>> AssociateIndividualExpression(
         ITypeParameterSymbol parameterSymbol,
         ITypeSymbol argumentSymbol)
     {
-        return (recorder) => recorder.Handle(It.Is(MatchRecordCommand(parameterSymbol, argumentSymbol)));
+        return (associator) => associator.Handle(It.Is(MatchAssociateIndividualCommand(parameterSymbol, argumentSymbol)));
     }
 
-    private static Expression<Func<IRecordArgumentAssociationCommand<ITypeParameter, ISemanticTypeArgumentData>, bool>> MatchRecordCommand(
+    private static Expression<Func<IAssociateSingleArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>, bool>> MatchAssociateIndividualCommand(
         ITypeParameterSymbol parameterSymbol,
         ITypeSymbol argumentSymbol)
     {
@@ -108,7 +108,7 @@ public sealed class Handle
     }
 
     private void Target(
-        IAssociateArgumentsCommand<IAssociateSemanticTypeData> command)
+        IAssociateAllArgumentsCommand<IAssociateAllSemanticTypeArgumentsData> command)
     {
         Fixture.Sut.Handle(command);
     }
