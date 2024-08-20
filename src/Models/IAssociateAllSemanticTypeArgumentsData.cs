@@ -6,9 +6,9 @@ using Paraminter.Models;
 
 using System.Collections.Generic;
 
-/// <summary>Represents data used to associate semantic type arguments.</summary>
-public interface IAssociateSemanticTypeData
-    : IAssociateArgumentsData
+/// <summary>Represents data used to associate all semantic type arguments with parameters.</summary>
+public interface IAssociateAllSemanticTypeArgumentsData
+    : IAssociateAllArgumentsData
 {
     /// <summary>The type parameters.</summary>
     public abstract IReadOnlyList<ITypeParameterSymbol> Parameters { get; }

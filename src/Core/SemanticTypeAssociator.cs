@@ -1,35 +1,38 @@
 ﻿namespace Paraminter.Semantic.Type.Apheleia;
 
+using Microsoft.CodeAnalysis;
+
 using Paraminter.Arguments.Semantic.Type.Models;
 using Paraminter.Commands;
 using Paraminter.Cqs.Handlers;
 using Paraminter.Parameters.Type.Models;
-using Paraminter.Recorders.Commands;
 using Paraminter.Semantic.Type.Apheleia.Commands;
+using Paraminter.Semantic.Type.Apheleia.Errors;
+using Paraminter.Semantic.Type.Apheleia.Errors.Commands;
 using Paraminter.Semantic.Type.Apheleia.Models;
 
 using System;
 
-/// <summary>Associates semantic type arguments.</summary>
+/// <summary>Associates semantic type arguments with parameters.</summary>
 public sealed class SemanticTypeAssociator
-    : ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticTypeData>>
+    : ICommandHandler<IAssociateAllArgumentsCommand<IAssociateAllSemanticTypeArgumentsData>>
 {
-    private readonly ICommandHandler<IRecordArgumentAssociationCommand<ITypeParameter, ISemanticTypeArgumentData>> Recorder;
-    private readonly ICommandHandler<IInvalidateArgumentAssociationsRecordCommand> Invalidator;
+    private readonly ICommandHandler<IAssociateSingleArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>> IndividualAssociator;
+    private readonly ISemanticTypeAssociatorErrorHandler ErrorHandler;
 
-    /// <summary>Instantiates a <see cref="SemanticTypeAssociator"/>, associating semantic type arguments.</summary>
-    /// <param name="recorder">Records associated semantic type arguments.</param>
-    /// <param name="invalidator">Invalidates the record of associated semantic type arguments.</param>
+    /// <summary>Instantiates an associator of semantic type arguments with parameters.</summary>
+    /// <param name="individualAssociator">Associates individual semantic type arguments with parameters.</param>
+    /// <param name="errorHandler">Handles encountered errors.</param>
     public SemanticTypeAssociator(
-        ICommandHandler<IRecordArgumentAssociationCommand<ITypeParameter, ISemanticTypeArgumentData>> recorder,
-        ICommandHandler<IInvalidateArgumentAssociationsRecordCommand> invalidator)
+        ICommandHandler<IAssociateSingleArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>> individualAssociator,
+        ISemanticTypeAssociatorErrorHandler errorHandler)
     {
-        Recorder = recorder ?? throw new ArgumentNullException(nameof(recorder));
-        Invalidator = invalidator ?? throw new ArgumentNullException(nameof(invalidator));
+        IndividualAssociator = individualAssociator ?? throw new ArgumentNullException(nameof(individualAssociator));
+        ErrorHandler = errorHandler ?? throw new ArgumentNullException(nameof(errorHandler));
     }
 
-    void ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticTypeData>>.Handle(
-        IAssociateArgumentsCommand<IAssociateSemanticTypeData> command)
+    void ICommandHandler<IAssociateAllArgumentsCommand<IAssociateAllSemanticTypeArgumentsData>>.Handle(
+        IAssociateAllArgumentsCommand<IAssociateAllSemanticTypeArgumentsData> command)
     {
         if (command is null)
         {
@@ -38,19 +41,26 @@ public sealed class SemanticTypeAssociator
 
         if (command.Data.Parameters.Count != command.Data.Arguments.Count)
         {
-            Invalidator.Handle(InvalidateArgumentAssociationsRecordCommand.Instance);
+            ErrorHandler.DifferentNumberOfArgumentsAndParameters.Handle(HandleDifferentNumberOfArgumentsAndParametersCommand.Instance);
 
             return;
         }
 
         for (var i = 0; i < command.Data.Parameters.Count; i++)
         {
-            var parameter = new TypeParameter(command.Data.Parameters[i]);
-            var argumentData = new SemanticTypeArgumentData(command.Data.Arguments[i]);
-
-            var recordCommand = new RecordSemanticTypeAssociationCommand(parameter, argumentData);
-
-            Recorder.Handle(recordCommand);
+            AssociateArgument(command.Data.Parameters[i], command.Data.Arguments[i]);
         }
+    }
+
+    private void AssociateArgument(
+        ITypeParameterSymbol parameterSymbol,
+        ITypeSymbol argumentSymbol)
+    {
+        var parameter = new TypeParameter(parameterSymbol);
+        var argumentData = new SemanticTypeArgumentData(argumentSymbol);
+
+        var associateIndividualCommand = new AssociateSingleArgumentCommand(parameter, argumentData);
+
+        IndividualAssociator.Handle(associateIndividualCommand);
     }
 }
