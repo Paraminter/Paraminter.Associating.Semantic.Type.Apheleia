@@ -24,7 +24,7 @@ public sealed class Handle
     private readonly IFixture Fixture = FixtureFactory.Create();
 
     [Fact]
-    public void MethodInvocation_AssociatesAll()
+    public void MethodInvocation_PairsAll()
     {
         var source = """
             public class Foo

@@ -58,7 +58,7 @@ public sealed class Handle
     }
 
     [Fact]
-    public void SameNumberOfParametersAndArguments_AssociatesAllPairwise()
+    public void SameNumberOfParametersAndArguments_PairsAll()
     {
         var parameter1 = Mock.Of<ITypeParameterSymbol>();
         var parameter2 = Mock.Of<ITypeParameterSymbol>();
