@@ -1,38 +1,39 @@
-﻿namespace Paraminter.Semantic.Type.Apheleia;
+﻿namespace Paraminter.Associating.Semantic.Type.Apheleia;
 
 using Microsoft.CodeAnalysis;
 
 using Paraminter.Arguments.Semantic.Type.Models;
-using Paraminter.Commands;
+using Paraminter.Associating.Commands;
+using Paraminter.Associating.Semantic.Type.Apheleia.Commands;
+using Paraminter.Associating.Semantic.Type.Apheleia.Errors;
+using Paraminter.Associating.Semantic.Type.Apheleia.Errors.Commands;
+using Paraminter.Associating.Semantic.Type.Apheleia.Models;
 using Paraminter.Cqs.Handlers;
+using Paraminter.Pairing.Commands;
 using Paraminter.Parameters.Type.Models;
-using Paraminter.Semantic.Type.Apheleia.Commands;
-using Paraminter.Semantic.Type.Apheleia.Errors;
-using Paraminter.Semantic.Type.Apheleia.Errors.Commands;
-using Paraminter.Semantic.Type.Apheleia.Models;
 
 using System;
 
 /// <summary>Associates semantic type arguments with parameters.</summary>
 public sealed class SemanticTypeAssociator
-    : ICommandHandler<IAssociateAllArgumentsCommand<IAssociateAllSemanticTypeArgumentsData>>
+    : ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticTypeArgumentsData>>
 {
-    private readonly ICommandHandler<IAssociateSingleArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>> IndividualAssociator;
+    private readonly ICommandHandler<IPairArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>> Pairer;
     private readonly ISemanticTypeAssociatorErrorHandler ErrorHandler;
 
     /// <summary>Instantiates an associator of semantic type arguments with parameters.</summary>
-    /// <param name="individualAssociator">Associates individual semantic type arguments with parameters.</param>
+    /// <param name="pairer">Pairs semantic type arguments with parameters.</param>
     /// <param name="errorHandler">Handles encountered errors.</param>
     public SemanticTypeAssociator(
-        ICommandHandler<IAssociateSingleArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>> individualAssociator,
+        ICommandHandler<IPairArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>> pairer,
         ISemanticTypeAssociatorErrorHandler errorHandler)
     {
-        IndividualAssociator = individualAssociator ?? throw new ArgumentNullException(nameof(individualAssociator));
+        Pairer = pairer ?? throw new ArgumentNullException(nameof(pairer));
         ErrorHandler = errorHandler ?? throw new ArgumentNullException(nameof(errorHandler));
     }
 
-    void ICommandHandler<IAssociateAllArgumentsCommand<IAssociateAllSemanticTypeArgumentsData>>.Handle(
-        IAssociateAllArgumentsCommand<IAssociateAllSemanticTypeArgumentsData> command)
+    void ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticTypeArgumentsData>>.Handle(
+        IAssociateArgumentsCommand<IAssociateSemanticTypeArgumentsData> command)
     {
         if (command is null)
         {
@@ -48,19 +49,19 @@ public sealed class SemanticTypeAssociator
 
         for (var i = 0; i < command.Data.Parameters.Count; i++)
         {
-            AssociateArgument(command.Data.Parameters[i], command.Data.Arguments[i]);
+            PairArgument(command.Data.Parameters[i], command.Data.Arguments[i]);
         }
     }
 
-    private void AssociateArgument(
+    private void PairArgument(
         ITypeParameterSymbol parameterSymbol,
         ITypeSymbol argumentSymbol)
     {
         var parameter = new TypeParameter(parameterSymbol);
         var argumentData = new SemanticTypeArgumentData(argumentSymbol);
 
-        var associateIndividualCommand = new AssociateSingleArgumentCommand(parameter, argumentData);
+        var associateIndividualCommand = new PairArgumentCommand(parameter, argumentData);
 
-        IndividualAssociator.Handle(associateIndividualCommand);
+        Pairer.Handle(associateIndividualCommand);
     }
 }

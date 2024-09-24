@@ -1,4 +1,4 @@
-﻿namespace Paraminter.Semantic.Type.Apheleia.Errors.Commands;
+﻿namespace Paraminter.Associating.Semantic.Type.Apheleia.Errors.Commands;
 
 internal sealed class HandleDifferentNumberOfArgumentsAndParametersCommand
     : IHandleDifferentNumberOfArgumentsAndParametersCommand

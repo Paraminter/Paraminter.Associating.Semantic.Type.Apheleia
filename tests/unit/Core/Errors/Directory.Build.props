@@ -3,7 +3,7 @@
     <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
     <PropertyGroup>
-        <RootNamespace>Paraminter.Semantic.Type.Aphelia.Errors</RootNamespace>
+        <RootNamespace>Paraminter.Associating.Semantic.Type.Apheleia.Errors</RootNamespace>
     </PropertyGroup>
     
 </Project>

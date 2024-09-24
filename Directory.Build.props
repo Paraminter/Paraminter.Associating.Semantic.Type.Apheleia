@@ -3,7 +3,7 @@
     <PropertyGroup>
         <LangVersion>12</LangVersion>
 
-        <RootNamespace>Paraminter.Semantic.Type.Apheleia</RootNamespace>
+        <RootNamespace>Paraminter.Associating.Semantic.Type.Apheleia</RootNamespace>
 
         <Nullable>enable</Nullable>
         <AnalysisMode>all</AnalysisMode>
