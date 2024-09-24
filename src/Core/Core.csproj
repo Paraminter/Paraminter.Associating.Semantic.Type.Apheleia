@@ -1,16 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <AssemblyName>Paraminter.Semantic.Type.Apheleia</AssemblyName>
+        <AssemblyName>Paraminter.Associating.Semantic.Type.Apheleia</AssemblyName>
         
-        <PackageId>Paraminter.Semantic.Type.Apheleia</PackageId>
+        <PackageId>Paraminter.Associating.Semantic.Type.Apheleia</PackageId>
         <Description>Provides a Paraminter associator of semantic type arguments.</Description>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Paraminter.Arguments.Semantic.Type.Models" />
-        <PackageReference Include="Paraminter.Commands" />
+        <PackageReference Include="Paraminter.Associating.Commands" />
         <PackageReference Include="Paraminter.Cqs.Commands.Handlers" />
+        <PackageReference Include="Paraminter.Pairing.Commands" />
         <PackageReference Include="Paraminter.Parameters.Type.Models" />
 
         <ProjectReference Include="$(SolutionDir)\src\Models\Models.csproj" />

@@ -1,14 +1,14 @@
-﻿namespace Paraminter.Semantic.Type.Apheleia.Models;
+﻿namespace Paraminter.Associating.Semantic.Type.Apheleia.Models;
 
 using Microsoft.CodeAnalysis;
 
-using Paraminter.Models;
+using Paraminter.Associating.Models;
 
 using System.Collections.Generic;
 
-/// <summary>Represents data used to associate all semantic type arguments with parameters.</summary>
-public interface IAssociateAllSemanticTypeArgumentsData
-    : IAssociateAllArgumentsData
+/// <summary>Represents data used to associate semantic type arguments with parameters.</summary>
+public interface IAssociateSemanticTypeArgumentsData
+    : IAssociateArgumentsData
 {
     /// <summary>The type parameters.</summary>
     public abstract IReadOnlyList<ITypeParameterSymbol> Parameters { get; }

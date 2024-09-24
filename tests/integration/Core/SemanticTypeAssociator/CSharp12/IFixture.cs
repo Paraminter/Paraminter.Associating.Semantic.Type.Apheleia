@@ -1,18 +1,19 @@
-﻿namespace Paraminter.Semantic.Type.Apheleia;
+﻿namespace Paraminter.Associating.Semantic.Type.Apheleia;
 
 using Moq;
 
 using Paraminter.Arguments.Semantic.Type.Models;
-using Paraminter.Commands;
+using Paraminter.Associating.Commands;
+using Paraminter.Associating.Semantic.Type.Apheleia.Errors;
+using Paraminter.Associating.Semantic.Type.Apheleia.Models;
 using Paraminter.Cqs.Handlers;
+using Paraminter.Pairing.Commands;
 using Paraminter.Parameters.Type.Models;
-using Paraminter.Semantic.Type.Apheleia.Errors;
-using Paraminter.Semantic.Type.Apheleia.Models;
 
 internal interface IFixture
 {
-    public abstract ICommandHandler<IAssociateAllArgumentsCommand<IAssociateAllSemanticTypeArgumentsData>> Sut { get; }
+    public abstract ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticTypeArgumentsData>> Sut { get; }
 
-    public abstract Mock<ICommandHandler<IAssociateSingleArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>>> IndividualAssociatorMock { get; }
+    public abstract Mock<ICommandHandler<IPairArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>>> PairerMock { get; }
     public abstract Mock<ISemanticTypeAssociatorErrorHandler> ErrorHandlerMock { get; }
 }

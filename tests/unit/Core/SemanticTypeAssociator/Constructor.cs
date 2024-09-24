@@ -1,12 +1,12 @@
-﻿namespace Paraminter.Semantic.Type.Apheleia;
+﻿namespace Paraminter.Associating.Semantic.Type.Apheleia;
 
 using Moq;
 
 using Paraminter.Arguments.Semantic.Type.Models;
-using Paraminter.Commands;
+using Paraminter.Associating.Semantic.Type.Apheleia.Errors;
 using Paraminter.Cqs.Handlers;
+using Paraminter.Pairing.Commands;
 using Paraminter.Parameters.Type.Models;
-using Paraminter.Semantic.Type.Apheleia.Errors;
 
 using System;
 
@@ -15,7 +15,7 @@ using Xunit;
 public sealed class Constructor
 {
     [Fact]
-    public void NullIndividualAssociator_ThrowsArgumentNullException()
+    public void NullPairer_ThrowsArgumentNullException()
     {
         var result = Record.Exception(() => Target(null!, Mock.Of<ISemanticTypeAssociatorErrorHandler>()));
 
@@ -25,7 +25,7 @@ public sealed class Constructor
     [Fact]
     public void NullErrorHandler_ThrowsArgumentNullException()
     {
-        var result = Record.Exception(() => Target(Mock.Of<ICommandHandler<IAssociateSingleArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>>>(), null!));
+        var result = Record.Exception(() => Target(Mock.Of<ICommandHandler<IPairArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>>>(), null!));
 
         Assert.IsType<ArgumentNullException>(result);
     }
@@ -33,15 +33,15 @@ public sealed class Constructor
     [Fact]
     public void ValidArguments_ReturnsAssociator()
     {
-        var result = Target(Mock.Of<ICommandHandler<IAssociateSingleArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>>>(), Mock.Of<ISemanticTypeAssociatorErrorHandler>());
+        var result = Target(Mock.Of<ICommandHandler<IPairArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>>>(), Mock.Of<ISemanticTypeAssociatorErrorHandler>());
 
         Assert.NotNull(result);
     }
 
     private static SemanticTypeAssociator Target(
-        ICommandHandler<IAssociateSingleArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>> individualAssociator,
+        ICommandHandler<IPairArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>> pairer,
         ISemanticTypeAssociatorErrorHandler errorHandler)
     {
-        return new SemanticTypeAssociator(individualAssociator, errorHandler);
+        return new SemanticTypeAssociator(pairer, errorHandler);
     }
 }

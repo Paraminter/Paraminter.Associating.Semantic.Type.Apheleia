@@ -1,4 +1,4 @@
-﻿namespace Paraminter.Semantic.Type.Apheleia;
+﻿namespace Paraminter.Associating.Semantic.Type.Apheleia;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -6,11 +6,12 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Moq;
 
 using Paraminter.Arguments.Semantic.Type.Models;
-using Paraminter.Commands;
+using Paraminter.Associating.Commands;
+using Paraminter.Associating.Semantic.Type.Apheleia.Errors.Commands;
+using Paraminter.Associating.Semantic.Type.Apheleia.Models;
 using Paraminter.Cqs.Handlers;
+using Paraminter.Pairing.Commands;
 using Paraminter.Parameters.Type.Models;
-using Paraminter.Semantic.Type.Apheleia.Errors.Commands;
-using Paraminter.Semantic.Type.Apheleia.Models;
 
 using System;
 using System.Linq;
@@ -51,7 +52,7 @@ public sealed class Handle
 
         var arguments = ((IMethodSymbol)semanticModel.GetSymbolInfo(methodInvocation).Symbol!).TypeArguments;
 
-        Mock<IAssociateAllArgumentsCommand<IAssociateAllSemanticTypeArgumentsData>> commandMock = new();
+        Mock<IAssociateArgumentsCommand<IAssociateSemanticTypeArgumentsData>> commandMock = new();
 
         commandMock.Setup((command) => command.Data.Parameters).Returns(parameters);
         commandMock.Setup((command) => command.Data.Arguments).Returns(arguments);
@@ -60,20 +61,20 @@ public sealed class Handle
 
         Fixture.ErrorHandlerMock.Verify(static (handler) => handler.DifferentNumberOfArgumentsAndParameters.Handle(It.IsAny<IHandleDifferentNumberOfArgumentsAndParametersCommand>()), Times.Never());
 
-        Fixture.IndividualAssociatorMock.Verify(static (associator) => associator.Handle(It.IsAny<IAssociateSingleArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>>()), Times.Exactly(3));
-        Fixture.IndividualAssociatorMock.Verify(AssociateIndividualExpression(parameters[0], arguments[0]), Times.Once());
-        Fixture.IndividualAssociatorMock.Verify(AssociateIndividualExpression(parameters[1], arguments[1]), Times.Once());
-        Fixture.IndividualAssociatorMock.Verify(AssociateIndividualExpression(parameters[2], arguments[2]), Times.Once());
+        Fixture.PairerMock.Verify(PairArgumentExpression(parameters[0], arguments[0]), Times.Once());
+        Fixture.PairerMock.Verify(PairArgumentExpression(parameters[1], arguments[1]), Times.Once());
+        Fixture.PairerMock.Verify(PairArgumentExpression(parameters[2], arguments[2]), Times.Once());
+        Fixture.PairerMock.Verify(static (handler) => handler.Handle(It.IsAny<IPairArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>>()), Times.Exactly(3));
     }
 
-    private static Expression<Action<ICommandHandler<IAssociateSingleArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>>>> AssociateIndividualExpression(
+    private static Expression<Action<ICommandHandler<IPairArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>>>> PairArgumentExpression(
         ITypeParameterSymbol parameterSymbol,
         ITypeSymbol argumentSymbol)
     {
-        return (associator) => associator.Handle(It.Is(MatchAssociateIndividualCommand(parameterSymbol, argumentSymbol)));
+        return (associator) => associator.Handle(It.Is(MatchPairArgumentCommand(parameterSymbol, argumentSymbol)));
     }
 
-    private static Expression<Func<IAssociateSingleArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>, bool>> MatchAssociateIndividualCommand(
+    private static Expression<Func<IPairArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>, bool>> MatchPairArgumentCommand(
         ITypeParameterSymbol parameterSymbol,
         ITypeSymbol argumentSymbol)
     {
@@ -95,7 +96,7 @@ public sealed class Handle
     }
 
     private void Target(
-        IAssociateAllArgumentsCommand<IAssociateAllSemanticTypeArgumentsData> command)
+        IAssociateArgumentsCommand<IAssociateSemanticTypeArgumentsData> command)
     {
         Fixture.Sut.Handle(command);
     }
