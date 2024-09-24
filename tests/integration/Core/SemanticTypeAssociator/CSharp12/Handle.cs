@@ -24,7 +24,7 @@ public sealed class Handle
     private readonly IFixture Fixture = FixtureFactory.Create();
 
     [Fact]
-    public void MethodInvocation_AssociatesAll()
+    public void MethodInvocation_PairsAll()
     {
         var source = """
             public class Foo
@@ -71,7 +71,7 @@ public sealed class Handle
         ITypeParameterSymbol parameterSymbol,
         ITypeSymbol argumentSymbol)
     {
-        return (associator) => associator.Handle(It.Is(MatchPairArgumentCommand(parameterSymbol, argumentSymbol)));
+        return (handler) => handler.Handle(It.Is(MatchPairArgumentCommand(parameterSymbol, argumentSymbol)));
     }
 
     private static Expression<Func<IPairArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>, bool>> MatchPairArgumentCommand(

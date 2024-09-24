@@ -58,7 +58,7 @@ public sealed class Handle
     }
 
     [Fact]
-    public void SameNumberOfParametersAndArguments_AssociatesAllPairwise()
+    public void SameNumberOfParametersAndArguments_PairsAll()
     {
         var parameter1 = Mock.Of<ITypeParameterSymbol>();
         var parameter2 = Mock.Of<ITypeParameterSymbol>();
@@ -84,7 +84,7 @@ public sealed class Handle
         ITypeParameterSymbol parameterSymbol,
         ITypeSymbol argumentSymbol)
     {
-        return (associator) => associator.Handle(It.Is(MatchPairArgumentCommand(parameterSymbol, argumentSymbol)));
+        return (handler) => handler.Handle(It.Is(MatchPairArgumentCommand(parameterSymbol, argumentSymbol)));
     }
 
     private static Expression<Func<IPairArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>, bool>> MatchPairArgumentCommand(
