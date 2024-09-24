@@ -84,7 +84,7 @@ public sealed class Handle
         ITypeParameterSymbol parameterSymbol,
         ITypeSymbol argumentSymbol)
     {
-        return (associator) => associator.Handle(It.Is(MatchPairArgumentCommand(parameterSymbol, argumentSymbol)));
+        return (handler) => handler.Handle(It.Is(MatchPairArgumentCommand(parameterSymbol, argumentSymbol)));
     }
 
     private static Expression<Func<IPairArgumentCommand<ITypeParameter, ISemanticTypeArgumentData>, bool>> MatchPairArgumentCommand(
