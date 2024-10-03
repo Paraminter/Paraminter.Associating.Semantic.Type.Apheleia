@@ -60,8 +60,8 @@ public sealed class SemanticTypeAssociator
         var parameter = new TypeParameter(parameterSymbol);
         var argumentData = new SemanticTypeArgumentData(argumentSymbol);
 
-        var associateIndividualCommand = new PairArgumentCommand(parameter, argumentData);
+        var command = new PairArgumentCommand(parameter, argumentData);
 
-        Pairer.Handle(associateIndividualCommand);
+        Pairer.Handle(command);
     }
 }
