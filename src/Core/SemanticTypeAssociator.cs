@@ -13,6 +13,8 @@ using Paraminter.Pairing.Commands;
 using Paraminter.Parameters.Type.Models;
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 /// <summary>Associates semantic type arguments with parameters.</summary>
 public sealed class SemanticTypeAssociator
@@ -32,8 +34,9 @@ public sealed class SemanticTypeAssociator
         ErrorHandler = errorHandler ?? throw new ArgumentNullException(nameof(errorHandler));
     }
 
-    void ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticTypeArgumentsData>>.Handle(
-        IAssociateArgumentsCommand<IAssociateSemanticTypeArgumentsData> command)
+    async Task ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticTypeArgumentsData>>.Handle(
+        IAssociateArgumentsCommand<IAssociateSemanticTypeArgumentsData> command,
+        CancellationToken cancellationToken)
     {
         if (command is null)
         {
@@ -42,26 +45,27 @@ public sealed class SemanticTypeAssociator
 
         if (command.Data.Parameters.Count != command.Data.Arguments.Count)
         {
-            ErrorHandler.DifferentNumberOfArgumentsAndParameters.Handle(HandleDifferentNumberOfArgumentsAndParametersCommand.Instance);
+            await ErrorHandler.DifferentNumberOfArgumentsAndParameters.Handle(HandleDifferentNumberOfArgumentsAndParametersCommand.Instance, cancellationToken).ConfigureAwait(false);
 
             return;
         }
 
         for (var i = 0; i < command.Data.Parameters.Count; i++)
         {
-            PairArgument(command.Data.Parameters[i], command.Data.Arguments[i]);
+            await PairArgument(command.Data.Parameters[i], command.Data.Arguments[i], cancellationToken).ConfigureAwait(false);
         }
     }
 
-    private void PairArgument(
+    private async Task PairArgument(
         ITypeParameterSymbol parameterSymbol,
-        ITypeSymbol argumentSymbol)
+        ITypeSymbol argumentSymbol,
+        CancellationToken cancellationToken)
     {
         var parameter = new TypeParameter(parameterSymbol);
         var argumentData = new SemanticTypeArgumentData(argumentSymbol);
 
         var command = new PairArgumentCommand(parameter, argumentData);
 
-        Pairer.Handle(command);
+        await Pairer.Handle(command, cancellationToken).ConfigureAwait(false);
     }
 }
