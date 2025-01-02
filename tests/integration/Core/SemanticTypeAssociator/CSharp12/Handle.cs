@@ -9,7 +9,6 @@ using Paraminter.Arguments.Semantic.Type.Models;
 using Paraminter.Associating.Commands;
 using Paraminter.Associating.Semantic.Type.Apheleia.Errors.Commands;
 using Paraminter.Associating.Semantic.Type.Apheleia.Models;
-using Paraminter.Cqs;
 using Paraminter.Pairing.Commands;
 using Paraminter.Parameters.Type.Models;
 
