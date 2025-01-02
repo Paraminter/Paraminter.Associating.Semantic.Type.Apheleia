@@ -4,7 +4,6 @@ using Moq;
 
 using Paraminter.Arguments.Semantic.Type.Models;
 using Paraminter.Associating.Semantic.Type.Apheleia.Errors;
-using Paraminter.Cqs;
 using Paraminter.Pairing.Commands;
 using Paraminter.Parameters.Type.Models;
 

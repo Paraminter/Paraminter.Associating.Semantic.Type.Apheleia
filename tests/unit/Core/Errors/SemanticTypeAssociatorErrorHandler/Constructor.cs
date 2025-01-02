@@ -3,7 +3,6 @@
 using Moq;
 
 using Paraminter.Associating.Semantic.Type.Apheleia.Errors.Commands;
-using Paraminter.Cqs;
 
 using System;
 

@@ -1,7 +1,6 @@
 ﻿namespace Paraminter.Associating.Semantic.Type.Apheleia.Errors;
 
 using Paraminter.Associating.Semantic.Type.Apheleia.Errors.Commands;
-using Paraminter.Cqs;
 
 using Xunit;
 
